@@ -1774,7 +1774,7 @@ static void process_enumeration(tuh_xfer_t* xfer) {
       TU_ASSERT(total_len <= CFG_TUH_ENUMERATION_BUFSIZE,);
 
       // Get full configuration descriptor
-      uint8_t const config_idx = (uint8_t) tu_le16toh(xfer->setup->wIndex);
+      uint8_t const config_idx = (uint8_t) tu_le16toh(xfer->setup->wValue & 0xFF);
       TU_LOG_USBH("Get Configuration[%u] Descriptor\r\n", config_idx);
       TU_ASSERT(tuh_descriptor_get_configuration(daddr, config_idx, _usbh_epbuf.ctrl, total_len,
                                                  process_enumeration, ENUM_SET_CONFIG),);
@@ -1782,7 +1782,7 @@ static void process_enumeration(tuh_xfer_t* xfer) {
     }
 
     case ENUM_SET_CONFIG: {
-      uint8_t config_idx = (uint8_t) tu_le16toh(xfer->setup->wIndex);
+      uint8_t config_idx = (uint8_t) tu_le16toh(xfer->setup->wValue & 0xFF);
       if (tuh_enum_descriptor_configuration_cb(daddr, config_idx, (const tusb_desc_configuration_t*) _usbh_epbuf.ctrl)) {
         TU_ASSERT(tuh_configuration_set(daddr, config_idx+1u, process_enumeration, ENUM_CONFIG_DRIVER),);
       } else {
