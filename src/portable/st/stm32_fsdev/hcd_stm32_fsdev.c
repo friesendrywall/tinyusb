@@ -239,6 +239,7 @@ bool hcd_init(uint8_t rhport, const tusb_rhport_init_t* rh_init) {
     while (cycle_count > 0U) {
       cycle_count--;
     }
+    FSDEV_REG->ISTR = (fsdev_bus_t)~USB_ISTR_DCON; // Claude says to add this
     port_status_handler(rhport, false);
   }
 
