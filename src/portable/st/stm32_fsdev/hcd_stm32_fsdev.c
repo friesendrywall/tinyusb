@@ -232,6 +232,10 @@ bool hcd_init(uint8_t rhport, const tusb_rhport_init_t* rh_init) {
 
   fsdev_connect(rhport);
 
+  // Wait DP/DM stabilize time, a device may already be attached (eg after
+  // bootloader)
+  tusb_time_delay_ms_api(5);
+
   // If DCON_STAT is already set, the controller sometimes misses the initial connection interrupt
   if (FSDEV_REG->ISTR & USB_ISTR_DCON_STAT) {
     // Wait DP/DM stabilize time
